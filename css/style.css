@@ -1,0 +1,174 @@
+/* css/style.css */
+html {
+  scroll-behavior: smooth; /* Enable smooth scrolling */
+}
+
+body {
+  /* Base font, Tailwind usually handles this well */
+  @apply font-sans bg-base-100 text-base-content dark:bg-dark-base-100 dark:text-dark-base-content transition-colors duration-300;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Theme transition styles */
+body,
+.bg-white,
+.text-gray-800,
+.dark\:text-dark-text {
+    transition: all 0.3s ease-in-out;
+}
+
+.dark body {
+    background-color: var(--dark-base-100);
+    color: var(--dark-base-content);
+}
+
+/* Dark mode specific styles */
+.dark body {
+    background-color: var(--dark-base-100);
+}
+
+.dark .bg-white {
+    background-color: var(--dark-base-200);
+}
+
+/* Improved text contrast in dark mode */
+.dark .text-gray-800 {
+    color: var(--dark-text);
+}
+
+/* Card hover effect in dark mode */
+.dark .hover\:scale-105:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Custom toast notification styling */
+#toast-notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    opacity: 0; /* Initially hidden */
+    transform: translateY(20px);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+#toast-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#toast-notification.success {
+    @apply bg-green-500 text-white;
+}
+
+#toast-notification.error {
+     @apply bg-red-500 text-white;
+}
+
+/* Style for password strength */
+.strength-meter {
+    height: 5px;
+    background: #eee;
+    border-radius: 5px;
+    margin-top: 5px;
+    transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    width: 0%; /* Start empty */
+}
+.strength-weak { background: #ef4444; width: 33%; } /* red-500 */
+.strength-medium { background: #f59e0b; width: 66%; } /* amber-500 */
+.strength-strong { background: #22c55e; width: 100%; } /* green-500 */
+
+/* Optional: Style for category icons in dropdown */
+.category-option i {
+    margin-right: 8px;
+    width: 1em; /* Ensure consistent icon width */
+    text-align: center;
+}
+
+/* Card transitions */
+.bg-white {
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.dark .bg-white {
+    background-color: var(--dark-base-200);
+}
+
+/* Input field transitions */
+input, select, textarea {
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+    background-color: var(--dark-base-300);
+    border-color: var(--dark-base-200);
+    color: var(--dark-base-content);
+}
+
+/* Chart background transition */
+canvas {
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Add these styles for better chart visibility */
+.chart-container {
+    position: relative;
+    height: 100%;
+}
+
+.dark canvas {
+    background-color: transparent;
+}
+
+/* Improved tooltip styling */
+.chartjs-tooltip {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.dark .chartjs-tooltip {
+    background-color: rgba(31, 41, 55, 0.95);
+    border: 1px solid rgba(75, 85, 99, 0.2);
+}
+
+/* Theme transitions */
+body,
+.bg-base-200,
+input,
+select,
+button {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Dark mode input and select styles */
+.dark input,
+.dark select {
+    background-color: var(--dark-base-300);
+    border-color: var(--dark-base-200);
+    color: var(--dark-text);
+}
+
+/* Dark mode focus states */
+.dark input:focus,
+.dark select:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+/* Card shadow improvements */
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.dark .shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 
+                0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}

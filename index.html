@@ -1,0 +1,209 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- SEO -->
+<meta name="description" content="Track your expenses easily and visualize your spending patterns. Sign up for free.">
+<link rel="icon" href="./assets/favicon.ico" type="image/x-icon"> <!-- Add a favicon -->
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  // Tailwind dark mode configuration (place BEFORE the main Tailwind script if customizing)
+  tailwind.config = {
+    darkMode: 'class', // Enable class-based dark mode
+    theme: {
+      extend: {
+        colors: { // Example custom colors (optional)
+          primary: {
+            light: '#60A5FA', // Lighter blue
+            DEFAULT: '#2563EB', // blue-600
+            dark: '#1D4ED8', // blue-700
+          },
+          // Light theme colors
+          'base-100': '#F8FAFC', // Light gray background
+          'base-200': '#FFFFFF', // White cards
+          'base-300': '#F1F5F9', // Light gray accents
+          'base-content': '#1E293B', // Dark text
+          // Dark theme colors
+          'dark-base-100': '#1F2937', // Dark gray background
+          'dark-base-200': '#374151', // Slightly lighter gray for cards
+          'dark-base-300': '#4B5563', // Medium gray accents
+          'dark-text': '#F9FAFB', // Light gray text
+          'dark-heading': '#60A5FA', // Light blue for headings in dark mode
+        },
+        backgroundColor: theme => ({
+          ...theme('colors'),
+        }),
+        textColor: theme => ({
+          ...theme('colors'),
+        }),
+        animation: {
+          'fade-in': 'fadeIn 0.5s ease-out forwards',
+          'fade-out': 'fadeOut 0.5s ease-out forwards',
+        },
+        keyframes: {
+          fadeIn: {
+            '0%': { opacity: '0', transform: 'translateY(10px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' },
+          },
+           fadeOut: {
+            '0%': { opacity: '1', transform: 'translateY(0)' },
+            '100%': { opacity: '0', transform: 'translateY(10px)' },
+          },
+        }
+      }
+    }
+  }
+</script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Font Awesome (Optional, for icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Base CSS (Optional) -->
+<link rel="stylesheet" href="css/style.css">
+
+<title>Expense Tracker Pro</title> <!-- Update title per page -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class=""> <!-- Add 'dark' class dynamically -->
+<head>
+    <!-- Include Head Content from Step 1 -->
+    <title>Dashboard - Expense Tracker Pro</title>
+</head>
+<body class="min-h-screen bg-base-100 dark:bg-dark-base-100 text-base-content dark:text-dark-text transition-colors duration-300">
+
+    <!-- Navigation -->
+    <nav class="bg-primary shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo/Title -->
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="text-white text-2xl font-bold flex items-center">
+                        <i class="fas fa-wallet mr-2"></i> <!-- Example icon -->
+                        Expense Tracker
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="index.html" class="text-white hover:bg-primary-dark px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200" aria-current="page">Dashboard</a>
+                    <a href="add-expense.html" id="nav-add-expense" class="text-white hover:bg-primary-dark px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hidden">Add Expense</a>
+                    <span id="nav-user-section" class="hidden items-center space-x-4">
+                        <span class="text-primary-light font-medium text-sm"></span> <!-- Welcome message -->
+                        <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200">Logout</button>
+                    </span>
+                     <span id="nav-auth-section" class="hidden items-center space-x-2">
+                        <a href="login.html" class="text-white hover:bg-primary-dark px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Sign In</a>
+                        <a href="signup.html" class="bg-white text-primary hover:bg-gray-100 px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-200">Sign Up</a>
+                    </span>
+                    <!-- Theme Toggle Button -->
+                    <button id="theme-toggle" class="text-white hover:bg-primary-dark p-2 rounded-full transition-colors duration-200">
+                        <i id="theme-toggle-icon" class="fas fa-sun"></i> <!-- Icon changes with theme -->
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                     <!-- Theme Toggle Button (Mobile) -->
+                     <button id="theme-toggle-mobile" class="text-white hover:bg-primary-dark p-2 rounded-full transition-colors duration-200 mr-2">
+                        <i id="theme-toggle-icon-mobile" class="fas fa-sun"></i>
+                    </button>
+                    <button id="mobile-menu-button" class="text-white p-2 rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu, show/hide based on menu state. -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                 <a href="index.html" class="text-white hover:bg-primary-dark block px-3 py-2 rounded-md text-base font-medium" aria-current="page">Dashboard</a>
+                 <a href="add-expense.html" id="mobile-nav-add-expense" class="text-white hover:bg-primary-dark block px-3 py-2 rounded-md text-base font-medium hidden">Add Expense</a>
+                 <!-- Mobile Auth/User Links (Populated by JS) -->
+                  <div id="mobile-nav-user-section" class="hidden pt-2 border-t border-primary-light">
+                      <span class="text-primary-light block px-3 py-2 text-sm"></span> <!-- Welcome -->
+                      <button id="mobile-logout-button" class="w-full text-left bg-red-500 hover:bg-red-600 text-white block px-3 py-2 rounded-md text-base font-medium mt-1">Logout</button>
+                  </div>
+                  <div id="mobile-nav-auth-section" class="hidden pt-2 border-t border-primary-light space-y-1">
+                     <a href="login.html" class="text-white hover:bg-primary-dark block px-3 py-2 rounded-md text-base font-medium">Sign In</a>
+                     <a href="signup.html" class="bg-white text-primary hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Sign Up</a>
+                 </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto mt-8 p-4 md:p-6 lg:p-8">
+
+        <!-- Welcome Message - Update this section -->
+        <div id="welcome-message" class="mb-6 text-center text-2xl font-semibold text-primary-light dark:text-primary-light hidden">
+            Welcome back, <span id="user-name" class="text-primary-light dark:text-primary-light">User</span>!
+        </div>
+
+        <!-- Login Prompt -->
+        <div id="login-prompt" class="text-center p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-base-content dark:text-dark-base-content">Welcome to Expense Tracker Pro</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">Please <a href="login.html" class="text-primary hover:underline font-medium">log in</a> or <a href="signup.html" class="text-primary hover:underline font-medium">sign up</a> to manage and visualize your expenses.</p>
+        </div>
+
+        <!-- Dashboard Content - Update the container classes -->
+        <div id="dashboard-content" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Expense Summary Card -->
+                <div class="lg:col-span-1 bg-base-200 dark:bg-dark-base-200 p-6 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300">
+                    <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-3">Expense Summary</h2>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Total Expenses:</span>
+                            <span id="summary-total-expenses" class="text-2xl font-bold text-red-600 dark:text-red-500">₹0.00</span>
+                        </div>
+                        <!-- Add Income/Balance here if needed -->
+                         <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Budget Goal (Example):</span>
+                             <span class="text-lg font-medium text-gray-700 dark:text-gray-300">₹10,000</span>
+                        </div>
+                        <!-- Budget Progress Bar -->
+                        <div>
+                           <label for="budget-progress" class="text-sm text-gray-500 dark:text-gray-400">Spending Progress</label>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-1">
+                                <div id="budget-progress-bar" class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expense Chart Card -->
+                <div class="lg:col-span-2 bg-base-200 dark:bg-dark-base-200 p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4 text-center">Expenses by Category</h2>
+                    <div class="relative h-64 md:h-80">
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+                    <p id="chart-placeholder" class="text-center text-gray-500 dark:text-gray-400 mt-4">Add expenses to see the chart.</p>
+                </div>
+            </div>
+
+             <!-- Recent Transactions Card -->
+            <div class="bg-base-200 dark:bg-dark-base-200 p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4">Recent Transactions</h2>
+                <ul id="recent-transactions-list" class="space-y-3">
+                    <li class="text-gray-500 dark:text-gray-400 italic">No transactions yet.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification Placeholder -->
+    <div id="toast-notification" role="alert">
+        <span id="toast-message"></span>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- SEO -->
+<meta name="description" content="Track your expenses easily and visualize your spending patterns. Sign up for free.">
+<link rel="icon" href="./assets/favicon.ico" type="image/x-icon"> <!-- Add a favicon -->
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  // Tailwind dark mode configuration (place BEFORE the main Tailwind script if customizing)
+  tailwind.config = {
+    darkMode: 'class', // Enable class-based dark mode
+    theme: {
+      extend: {
+        colors: { // Example custom colors (optional)
+          primary: {
+            light: '#3B82F6', // blue-500
+            DEFAULT: '#2563EB', // blue-600
+            dark: '#1D4ED8', // blue-700
+          },
+          // Updated color scheme for better contrast
+          'base-100': '#FFFFFF', // Light mode background
+          'base-200': '#F3F4F6', // Light mode secondary background
+          'base-content': '#111827', // Light mode text
+          'dark-base-100': '#1F2937', // Dark mode background
+          'dark-base-200': '#111827', // Dark mode secondary background
+          'dark-base-content': '#F9FAFB', // Dark mode text
+          'base-300': '#E5E7EB',
+          'dark-base-300': '#0F172A',
+        },
+        backgroundColor: theme => ({
+          ...theme('colors'),
+        }),
+        textColor: theme => ({
+          ...theme('colors'),
+        }),
+        animation: {
+          'fade-in': 'fadeIn 0.5s ease-out forwards',
+          'fade-out': 'fadeOut 0.5s ease-out forwards',
+        },
+        keyframes: {
+          fadeIn: {
+            '0%': { opacity: '0', transform: 'translateY(10px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' },
+          },
+           fadeOut: {
+            '0%': { opacity: '1', transform: 'translateY(0)' },
+            '100%': { opacity: '0', transform: 'translateY(10px)' },
+          },
+        }
+      }
+    }
+  }
+</script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Font Awesome (Optional, for icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Base CSS (Optional) -->
+<link rel="stylesheet" href="css/style.css">
+
+<title>Expense Tracker Pro</title> <!-- Update title per page --><!DOCTYPE html>
+<html lang="en" class="">
+<head>
+     <!-- Include Head Content from Step 1 -->
+     <title>Login - Expense Tracker Pro</title>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-100 dark:from-gray-800 dark:via-gray-900 dark:to-black">
+
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md m-4 transform transition-all duration-500">
+        <div class="text-center mb-8">
+             <a href="index.html" class="inline-flex items-center text-primary dark:text-blue-400 text-3xl font-bold">
+                 <i class="fas fa-wallet mr-2"></i> Expense Tracker
+             </a>
+             <h1 class="text-2xl font-semibold mt-2 text-gray-800 dark:text-gray-100">Welcome Back!</h1>
+             <p class="text-sm text-gray-500 dark:text-gray-400">Log in to access your dashboard.</p>
+         </div>
+
+        <form id="login-form" novalidate>
+            <!-- Email -->
+            <div class="mb-4">
+                <label for="login-email" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Email Address</label>
+                <input type="email" id="login-email" name="email" required
+                       class="shadow appearance-none border dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent peer"
+                       placeholder="you@example.com">
+                <p class="text-red-500 text-xs italic mt-1 hidden peer-invalid:block">Please enter a valid email.</p>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-6">
+                <label for="login-password" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Password</label>
+                <input type="password" id="login-password" name="password" required
+                       class="shadow appearance-none border dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent peer"
+                       placeholder="••••••••">
+                 <p class="text-red-500 text-xs italic mt-1 hidden peer-invalid:block">Password is required.</p>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+             <div class="flex items-center justify-between mb-6">
+                <label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <input type="checkbox" id="remember-me" class="form-checkbox h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded mr-2">
+                    Remember Me
+                </label>
+                <a href="#" class="text-sm text-primary dark:text-blue-400 hover:text-primary-dark dark:hover:text-blue-300 hover:underline">
+                    Forgot Password?
+                </a> <!-- Non-functional for demo -->
+             </div>
+
+
+             <!-- Error Message -->
+             <div id="login-error" class="mb-4 text-red-600 dark:text-red-400 text-sm text-center hidden"></div>
+
+            <!-- Submit Button -->
+            <div class="flex items-center justify-center">
+                <button type="submit"
+                        class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 ease-in-out transform hover:scale-105">
+                    Log In
+                </button>
+            </div>
+        </form>
+
+        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+            Don't have an account?
+            <a href="signup.html" class="font-medium text-primary dark:text-blue-400 hover:text-primary-dark dark:hover:text-blue-300 hover:underline">
+                Sign Up
+            </a>
+        </p>
+    </div>
+
+    <!-- Toast Notification Placeholder -->
+    <div id="toast-notification" role="alert"><span id="toast-message"></span></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

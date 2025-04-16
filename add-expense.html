@@ -1,0 +1,211 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- SEO -->
+<meta name="description" content="Track your expenses easily and visualize your spending patterns. Sign up for free.">
+<link rel="icon" href="./assets/favicon.ico" type="image/x-icon"> <!-- Add a favicon -->
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  // Tailwind dark mode configuration (place BEFORE the main Tailwind script if customizing)
+  tailwind.config = {
+    darkMode: 'class', // Enable class-based dark mode
+    theme: {
+      extend: {
+        colors: { // Example custom colors (optional)
+          primary: {
+            light: '#60A5FA', // blue-400
+            DEFAULT: '#2563EB', // blue-600
+            dark: '#1D4ED8', // blue-700
+          },
+          // Light theme colors
+          'base-100': '#F8FAFC',  // Light gray background
+          'base-200': '#FFFFFF',  // White cards
+          'base-300': '#F1F5F9',  // Light gray accents
+          'base-content': '#1E293B', // Dark text
+          // Dark theme colors
+          'dark-base-100': '#1F2937', // Dark gray background
+          'dark-base-200': '#374151', // Slightly lighter gray for cards
+          'dark-base-300': '#4B5563', // Medium gray accents
+          'dark-text': '#F9FAFB',    // Light text
+          'dark-heading': '#60A5FA',  // Light blue for headings
+        },
+        backgroundColor: theme => ({
+          ...theme('colors'),
+        }),
+        textColor: theme => ({
+          ...theme('colors'),
+        }),
+        animation: {
+          'fade-in': 'fadeIn 0.5s ease-out forwards',
+          'fade-out': 'fadeOut 0.5s ease-out forwards',
+        },
+        keyframes: {
+          fadeIn: {
+            '0%': { opacity: '0', transform: 'translateY(10px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' },
+          },
+           fadeOut: {
+            '0%': { opacity: '1', transform: 'translateY(0)' },
+            '100%': { opacity: '0', transform: 'translateY(10px)' },
+          },
+        }
+      }
+    }
+  }
+</script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Font Awesome (Optional, for icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Base CSS (Optional) -->
+<link rel="stylesheet" href="css/style.css">
+
+<title>Expense Tracker Pro</title> <!-- Update title per page -->
+
+
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <!-- Include Head Content from Step 1 -->
+    <title>Add Expense - Expense Tracker Pro</title>
+</head>
+<body class="min-h-screen bg-base-100 dark:bg-dark-base-100 text-base-content dark:text-dark-text transition-colors duration-300">
+
+    <!-- Navigation (Same as index.html - Use JS to populate/sync state) -->
+     <nav class="bg-primary shadow-md sticky top-0 z-40">
+        <!-- Navbar code identical to index.html -->
+         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="flex items-center justify-between h-16">
+                 <!-- Logo/Title -->
+                 <div class="flex-shrink-0">
+                     <a href="index.html" class="text-white text-2xl font-bold flex items-center">
+                         <i class="fas fa-wallet mr-2"></i> Expense Tracker
+                     </a>
+                 </div>
+                 <!-- Desktop Menu -->
+                 <div class="hidden md:flex items-center space-x-4">
+                     <a href="index.html" class="text-white hover:bg-primary-dark px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Dashboard</a>
+                     <a href="add-expense.html" class="text-white bg-primary-dark px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Add Expense</a>
+                     <span id="nav-user-section" class="hidden items-center space-x-4"></span>
+                     <span id="nav-auth-section" class="hidden items-center space-x-2"></span>
+                     <button id="theme-toggle" class="text-white hover:bg-primary-dark p-2 rounded-full transition-colors duration-200"><i id="theme-toggle-icon" class="fas fa-sun"></i></button>
+                 </div>
+                 <!-- Mobile Menu Button -->
+                 <div class="md:hidden flex items-center">
+                      <button id="theme-toggle-mobile" class="text-white hover:bg-primary-dark p-2 rounded-full transition-colors duration-200 mr-2"><i id="theme-toggle-icon-mobile" class="fas fa-sun"></i></button>
+                     <button id="mobile-menu-button" class="text-white p-2 rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"><i class="fas fa-bars"></i></button>
+                 </div>
+             </div>
+         </div>
+         <!-- Mobile Menu -->
+         <div class="md:hidden hidden" id="mobile-menu">
+              <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                  <a href="index.html" class="text-white hover:bg-primary-dark block px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
+                  <a href="add-expense.html" class="text-white bg-primary-dark block px-3 py-2 rounded-md text-base font-medium" aria-current="page">Add Expense</a>
+                  <div id="mobile-nav-user-section" class="hidden pt-2 border-t border-primary-light"></div>
+                  <div id="mobile-nav-auth-section" class="hidden pt-2 border-t border-primary-light space-y-1"></div>
+              </div>
+         </div>
+     </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto mt-8 p-4 flex justify-center">
+        <div class="bg-base-200 dark:bg-dark-base-200 p-8 rounded-lg shadow-lg w-full max-w-lg transform transition-all duration-300">
+            <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100 text-center">Add New Expense</h1>
+
+            <form id="add-expense-form" novalidate>
+                <!-- Amount -->
+                <div class="mb-5 relative">
+                    <label for="expense-amount" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Amount (₹)</label>
+                    <span class="absolute left-3 top-10 text-gray-500 dark:text-gray-400">₹</span>
+                    <input type="number" id="expense-amount" name="amount" step="0.01" min="0.01" required
+                           class="pl-7 shadow appearance-none border dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-dark-base-300 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent peer"
+                           placeholder="e.g., 500.00">
+                     <p class="text-red-500 text-xs italic mt-1 hidden peer-invalid:block">Please enter a valid positive amount.</p>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-5">
+                    <label for="expense-description" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Description</label>
+                    <input type="text" id="expense-description" name="description" required maxlength="100"
+                           class="shadow appearance-none border dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-dark-base-300 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent peer"
+                           placeholder="e.g., Groceries from store">
+                    <p class="text-red-500 text-xs italic mt-1 hidden peer-invalid:block">Description is required.</p>
+                </div>
+
+                 <!-- Date (Optional but good) -->
+                 <div class="mb-5">
+                     <label for="expense-date" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Date</label>
+                     <input type="date" id="expense-date" name="date" required
+                            class="shadow appearance-none border dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-dark-base-300 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value=""> <!-- JS will set default to today -->
+                 </div>
+
+
+                <!-- Category -->
+                <div class="mb-5">
+                    <label for="expense-category-select" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Category</label>
+                    <select id="expense-category-select" name="category" required
+                            class="shadow border dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-dark-base-300 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 peer">
+                        <option value="" disabled selected>-- Select a category --</option>
+                        <option value="food">🍽️ Food & Dining</option>
+                        <option value="transport">🚗 Transportation</option>
+                        <option value="utilities">⚡ Utilities</option>
+                        <option value="entertainment">🎬 Entertainment</option>
+                        <option value="shopping">🛍️ Shopping</option>
+                        <option value="health">💊 Healthcare</option>
+                        <option value="housing">🏠 Housing & Rent</option>
+                        <option value="education">📚 Education</option>
+                        <option value="_new_" class="font-semibold text-primary">➕ Add New Category</option>
+                    </select>
+                     <p class="text-red-500 text-xs italic mt-1 hidden peer-invalid:block">Please select a category.</p>
+                </div>
+
+                <!-- New Category Input (hidden initially) -->
+                <div id="new-category-section" class="mb-5 hidden animate-fade-in">
+                     <label for="new-category-input" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">New Category Name</label>
+                     <div class="flex space-x-2">
+                        <input type="text" id="new-category-input" name="new_category"
+                           class="flex-grow shadow appearance-none border dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                           placeholder="e.g., Health">
+                         <!-- Optional: Icon selector for new category -->
+                         <select id="new-category-icon" class="shadow border dark:border-gray-600 rounded py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white">
+                            <option value="fas fa-tag" selected>Icon</option>
+                            <option value="fas fa-utensils">🍽️ Food</option>
+                            <option value="fas fa-car">🚗 Transport</option>
+                            <option value="fas fa-film">🎬 Entertainment</option>
+                             <option value="fas fa-bolt">⚡ Utilities</option>
+                             <option value="fas fa-pills">💊 Health</option>
+                             <option value="fas fa-tshirt">👕 Clothing</option>
+                             <option value="fas fa-gifts">🎁 Gifts</option>
+                             <option value="fas fa-ellipsis-h">❓ Other</option>
+                         </select>
+                     </div>
+                      <p id="new-category-error" class="text-red-500 text-xs italic mt-1 hidden"></p>
+                </div>
+
+                <!-- Error Message Area -->
+                <div id="expense-error-message" class="mb-4 text-red-600 dark:text-red-400 text-center font-semibold hidden"></div>
+
+                <!-- Submit Button -->
+                <div class="flex items-center justify-center mt-6">
+                    <button type="submit"
+                            class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-8 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                            id="add-expense-button">
+                        Add Expense
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Toast Notification Placeholder -->
+    <div id="toast-notification" role="alert"><span id="toast-message"></span></div>
+
+    <script src="js/app.js"></script>
+    <script src="js/add-expense.js"></script>
+</body>
+</html>
